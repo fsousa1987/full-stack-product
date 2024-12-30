@@ -3,16 +3,44 @@ package com.francisco;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @SpringBootApplication
 public class Main {
 
+    // db
+    private static List<Customer> customers;
+
+    static {
+        customers = new ArrayList<>();
+
+        Customer alex = new Customer(
+                1,
+                "Alex",
+                "alex@gmail.com",
+                21
+
+        );
+        customers.add(alex);
+
+        Customer jamila = new Customer(
+                2,
+                "Jamila",
+                "jamila@gmail.com",
+                19
+
+        );
+        customers.add(jamila);
+    }
+
     public static void main(String[] args) {
+        System.out.println(customers);
         SpringApplication.run(Main.class, args);
     }
 
-    class Customer {
+    static class Customer {
         private Integer id;
         private String name;
         private String email;
