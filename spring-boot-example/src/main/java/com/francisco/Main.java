@@ -3,6 +3,7 @@ package com.francisco;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -46,6 +47,15 @@ public class Main {
     @GetMapping("api/v1/customers")
     public List<Customer> getCustomers() {
         return customers;
+    }
+
+    @GetMapping("api/v1/customers/{customerId}")
+    public Customer getCustomer(@PathVariable("customerId") Integer customerId) {
+        return customers
+                .stream()
+                .filter(customer -> customer.id.equals(customerId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("customer with id [%s] not found".formatted(customerId)));
     }
 
     static class Customer {
