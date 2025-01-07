@@ -1,6 +1,7 @@
 package com.francisco.customer;
 
-import com.francisco.exception.ResourceNotFound;
+import com.francisco.exception.DuplicateResourceException;
+import com.francisco.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,23 @@ public class CustomerService {
     public Customer getCustomer(Integer id) {
         return customerDao
                 .selectCustomerById(id)
-                .orElseThrow(() -> new ResourceNotFound("customer with id [%s] not found".formatted(id)));
+                .orElseThrow(() -> new ResourceNotFoundException("customer with id [%s] not found".formatted(id)));
+    }
+
+    public void addCustomer(CustomerRegistrationRequest customerRegistrationRequest) {
+        // check if email exists
+        String email = customerRegistrationRequest.email();
+        if (customerDao.existsPersonWithEmail(email)) {
+            throw new DuplicateResourceException("email already taken");
+        }
+
+        // add
+        Customer customer = new Customer(
+                customerRegistrationRequest.name(),
+                customerRegistrationRequest.email(),
+                customerRegistrationRequest.age()
+        );
+        customerDao.insertCustomer(customer);
     }
 
 }
